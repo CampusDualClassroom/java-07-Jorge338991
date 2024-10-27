@@ -1,6 +1,5 @@
 package com.campusdual.classroom;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Exercise07 {
 
