@@ -1,0 +1,38 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Exercise07-1
+      id: exercise07-1
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Exercise07-1
+        setup-command: mvn compile
+        command: mvn test -Dtest="Exercise07Test#sumFirstNaturalNumbers"
+        timeout: 10
+    - name: Exercise07-2
+      id: exercise07-2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Exercise07-2
+        setup-command: mvn compile
+        command: mvn test -Dtest="Exercise07Test#showFirstNaturalNumbers"
+        timeout: 10
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        EXERCISE07-1_RESULTS: "${{steps.exercise07-1.outputs.result}}"
+        EXERCISE07-2_RESULTS: "${{steps.exercise07-2.outputs.result}}"
+      with:
+        runners: exercise07-1,exercise07-2
